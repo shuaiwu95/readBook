@@ -1,0 +1,20 @@
+@font-face {
+    font-family: 'iconfont';  /* project id 1585661 */
+    src: url('//at.alicdn.com/t/font_1585661_d9zj5vuqa2o.eot');
+    src: url('//at.alicdn.com/t/font_1585661_d9zj5vuqa2o.eot?#iefix') format('embedded-opentype'),
+    url('//at.alicdn.com/t/font_1585661_d9zj5vuqa2o.woff2') format('woff2'),
+    url('//at.alicdn.com/t/font_1585661_d9zj5vuqa2o.woff') format('woff'),
+    url('//at.alicdn.com/t/font_1585661_d9zj5vuqa2o.ttf') format('truetype'),
+    url('//at.alicdn.com/t/font_1585661_d9zj5vuqa2o.svg#iconfont') format('svg');
+  }
+.iconFont {
+    font-family: 'iconfont';
+}
+/* 账号 */
+.icon-userInput:before { 
+    content: '\e678';
+}
+/* 密码 */
+.icon-pswInput:before { 
+    content: '\e61b';
+}

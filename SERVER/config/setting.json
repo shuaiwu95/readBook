@@ -1,0 +1,18 @@
+{
+   "addTask": {
+        "path": "/addTask",
+        "requestUrl": "http://117.34.118.30:12056",
+        "requestPath": "/api/v1/basic/record/task",
+        "method": "post",
+        "content-type": "application/json",
+        "json": true
+   },
+   "delTask": {
+        "path": "/delTask",
+        "requestUrl": "http://117.34.118.30:12056",
+        "requestPath": "/api/v1/basic/record/task",
+        "method": "delete",
+        "content-type": "application/json",
+        "json": true
+   }
+}
