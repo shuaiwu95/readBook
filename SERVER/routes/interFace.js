@@ -3,8 +3,7 @@ const router = express.Router();
 const path = require('path');
 // const request = require('request')
 const qs = require('querystring');
-const http = require('http')
-const bodyParser = require('body-parser'); //对post请求的请求体进行解析模块
+const http = require('http') 
 const fs = require('fs'); //文件模块
 const cheerio = require('cheerio')
 const request = require('superagent')
@@ -12,6 +11,8 @@ require('superagent-charset')(request)
 // https://m.kuxiaoshuo.com/ 
 // 首页
 const indexUrl = 'https://m.kuxiaoshuo.com/'
+const classificationUrl = 'https://m.kuxiaoshuo.com/sort.html'
+const detailUrl = 'https://m.kuxiaoshuo.com'
 // 各类排行榜简略
 router.post('/rankSmall',(req,res,next)=>{
     console.log('正在请求首页推荐列表')
@@ -61,20 +62,62 @@ router.post('/rankSmall',(req,res,next)=>{
         console.log()
         res.json({'data': rankSmallData,'msg':'OK,请求成功！'})
     })
-    // const requestBack = (error, response, body) => {
-    //     if (!error && response.statusCode == 200) {
-    //         console.log(body) // 请求成功的处理逻辑
-    //         res.json(body)
-    //     }
-    // }
-    // request({
-    //     url: indexUrl,
-    //     method: 'get',
-    //     json: false,
-    //     headers: {
-    //         // "content-type": setJson['content-type'],
-    //     }
-    // }, requestBack)
+})
+// 小说分类查询
+router.post('/classification',(req,res,next)=>{
+    console.log('正在请求小说分类')
+    request.get(classificationUrl).charset('gbk').end((err,response)=>{
+        let $ = cheerio.load(response.text)
+        let $contentList = $('.content ul li')
+        let classData = []
+        $contentList.each(function(liIndex,liItem){
+            let itemName = $(liItem).find('a').text()
+            let url = $(liItem).find('a').attr('href')
+            classData.push({
+                'name': itemName,
+                'url': url
+            })
+        })
+        console.log('小说分类-请求成功！')
+        res.json({'data': classData,'msg':'OK,请求成功！'})
+    })
+})
+// 小说封面查询details
+router.post('/details',(req,res,next)=>{
+    console.log('正在请求小说详情')
+    console.log(req.body.id)
+    request.get(detailUrl + req.body.id).charset('gbk').end((err,response)=>{
+        let $ = cheerio.load(response.text)
+        let $block = $('.block')
+        let imgUrl = $block.find('img').attr('src')
+        let title = $block.find('h2 a').text()
+        let author = $block.find('p').eq(2).find('a').text()
+        let type = $block.find('p').eq(3).find('a').text()
+        let status = $block.find('p').eq(4).text()
+        let update = $block.find('p').eq(5).text()
+        let newData = $block.find('p').eq(6).find('a').text()
+        let info = $block.find('.intro_info').text()
+        let newChapterLi = $('.chapter').find('li')
+        let newChapters = []
+        newChapterLi.each(function(i,e){
+            newChapters.push({
+                name: $(e).find('a').text(),
+                url: $(e).find('a').attr('href')
+            })
+        })
+        console.log('小说详情-请求成功！')
+        res.json({'data': {
+            imgUrl: imgUrl,
+            title: title,
+            author: author,
+            type: type,
+            status: status,
+            update: update,
+            newData: newData,
+            info: info,
+            newChapters: newChapters
+        },'msg':'OK,请求成功！'})
+    })
 })
 module.exports = router;
   

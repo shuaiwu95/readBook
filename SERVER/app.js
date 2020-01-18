@@ -5,6 +5,7 @@ var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 var interFace = require('./routes/interFace');
 var app = express();
+const bodyParser = require('body-parser'); //对post请求的请求体进行解析模块
 // cross origin
 app.all('*', function (req, res, next) {
   res.header('Access-Control-Allow-Origin', '*')
@@ -14,6 +15,8 @@ app.all('*', function (req, res, next) {
   next()
 })
 // view engine setup
+// parse application/json
+app.use(bodyParser.json())
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 app.use('/app', interFace);
@@ -21,5 +24,4 @@ app.use('/app', interFace);
 app.use(function(req, res, next) {
   next(createError(404));
 });
-
 module.exports = app;

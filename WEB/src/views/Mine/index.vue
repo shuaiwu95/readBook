@@ -11,9 +11,17 @@ export default {
   },
   mounted () {
     this.$store.state.botNav.activeMine = true
+    this.$store.state.botNav.showTopNav = true
+    this.$store.state.botNav.showBottomNav = true
   },
   destroyed () {
     this.$store.state.botNav.activeMine = false
+  },
+  activated () {
+
+  },
+  deactivated: function () {
+
   }
 }
 </script>

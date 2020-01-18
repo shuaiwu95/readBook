@@ -7,6 +7,7 @@ import Home from '@/views/Home'
 import Mine from '@/views/Mine'
 import ClassView from '@/views/ClassView'
 import Rank from '@/views/Rank'
+import Detail from '@/views/BookDetails'
 Vue.use(Router)
 const routerInstance = new Router({
   routes: [
@@ -14,25 +15,21 @@ const routerInstance = new Router({
       path: '/',
       name: 'Layout',
       component: Layout,
-      meta: {
-        isCache: false,
-        requireAuth: true
-      },
       children: [
         {
           path: '/',
           name: 'Home',
           component: Home,
           meta: {
-            isCache: false,
-            requireAuth: true
+            isCache: true,
+            requireAuth: false
           }
         }, {
           path: 'classview',
           name: 'ClassView',
           component: ClassView,
           meta: {
-            isCache: false,
+            isCache: true,
             requireAuth: false
           }
         }, {
@@ -47,6 +44,14 @@ const routerInstance = new Router({
           path: 'mine',
           name: 'Mine',
           component: Mine,
+          meta: {
+            isCache: false,
+            requireAuth: false
+          }
+        }, {
+          path: 'detail',
+          name: 'Detail',
+          component: Detail,
           meta: {
             isCache: false,
             requireAuth: false

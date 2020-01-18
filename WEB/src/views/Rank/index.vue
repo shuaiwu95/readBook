@@ -7,9 +7,17 @@ export default {
 
   },
   mounted () {
-    this.$store.state.botNav.activeRank = true
+
   },
   destroyed () {
+
+  },
+  activated () {
+    this.$store.state.botNav.activeRank = true
+    this.$store.state.botNav.showTopNav = true
+    this.$store.state.botNav.showBottomNav = true
+  },
+  deactivated: function () {
     this.$store.state.botNav.activeRank = false
   }
 }

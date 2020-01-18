@@ -1,13 +1,5 @@
 <template>
     <div>
-        <yd-navbar height="2.4rem" fontsize="1rem">
-            <router-link to="#" slot="left">
-                <span style="font-size:1rem;color:#000;">书虫小说网</span>
-            </router-link>
-            <router-link to="#" slot="right">
-                <yd-icon name="search" size="1.2rem" color="#09BB07"></yd-icon>
-            </router-link>
-        </yd-navbar>
         <con-view>
           <yd-search :result="result" fullpage v-model="value2" :item-click="itemClickHandler" :on-submit="submitHandler"></yd-search>
           <yd-rollnotice autoplay="2000">
@@ -25,7 +17,10 @@
             <ul class="artcleSmallList">
               <li :key="index2" v-for="(item2,index2) in item['listArr']">
                 <span>{{item2['type']}}</span>
-                <a href="#" @click="goRead(item2['url'])">{{item2['name']}}</a>
+                <!-- <a href="#" @click="goRead(item2['url'])">{{item2['name']}}</a> -->
+                <router-link :to="{path: '/detail', query: {url:item2['url'],name:item2['name']}}">
+                  <a href="#">{{item2['name']}}</a>
+                </router-link>
                 /
                 <span>{{item2['authorName']}}</span>
               </li>
@@ -38,12 +33,13 @@
 <script>
 import ConView from '@common/ConView'
 export default {
+  name: 'Home',
   components: {
     ConView
   },
   methods: {
     goRead (url) {
-      alert(url)
+      this.$router.push({ name: 'Detail' })
     },
     getResult (val) {
       if (!val) return []
@@ -60,7 +56,6 @@ export default {
     }
   },
   mounted () {
-    this.$store.state.botNav.activeHome = true
     this.$api['getBook.getSmallRank']().then(res => {
       if (res.msg.indexOf('OK') >= 0) {
         this.tabData = res.data
@@ -68,6 +63,14 @@ export default {
     })
   },
   destroyed () {
+
+  },
+  activated () {
+    this.$store.state.botNav.activeHome = true
+    this.$store.state.botNav.showTopNav = true
+    this.$store.state.botNav.showBottomNav = true
+  },
+  deactivated: function () {
     this.$store.state.botNav.activeHome = false
   },
   data () {

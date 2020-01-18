@@ -21,6 +21,24 @@ export const systemApi = {
         role: []
       },
       desc: '获取首页排行'
+    }, {
+      name: 'classification',
+      method: 'POST',
+      path: '/app/classification',
+      mockPath: '/app/classification',
+      params: {
+        role: []
+      },
+      desc: '获取小说分类'
+    }, {
+      name: 'details',
+      method: 'POST',
+      path: '/app/details',
+      mockPath: '/app/details',
+      params: {
+        role: []
+      },
+      desc: '获取小说详情'
     }
   ]
 }
