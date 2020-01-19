@@ -8,6 +8,8 @@ import Mine from '@/views/Mine'
 import ClassView from '@/views/ClassView'
 import Rank from '@/views/Rank'
 import Detail from '@/views/BookDetails'
+// ReadBook
+import ReadBook from '@/views/ReadBook'
 Vue.use(Router)
 const routerInstance = new Router({
   routes: [
@@ -52,6 +54,14 @@ const routerInstance = new Router({
           path: 'detail',
           name: 'Detail',
           component: Detail,
+          meta: {
+            isCache: false,
+            requireAuth: false
+          }
+        }, {
+          path: 'readBook',
+          name: 'ReadBook',
+          component: ReadBook,
           meta: {
             isCache: false,
             requireAuth: false

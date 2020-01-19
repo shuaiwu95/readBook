@@ -39,6 +39,15 @@ export const systemApi = {
         role: []
       },
       desc: '获取小说详情'
+    }, {
+      name: 'readBook',
+      method: 'POST',
+      path: '/app/readBook',
+      mockPath: '/app/readBook',
+      params: {
+        role: []
+      },
+      desc: '获取小说内容'
     }
   ]
 }
