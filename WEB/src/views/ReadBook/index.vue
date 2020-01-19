@@ -1,17 +1,21 @@
 <template>
-    <div>
-      <yd-navbar height="2.4rem" fontsize="1rem" :fixed="true">
+    <div style="height:100%;background-color: #E6E0D0;">
+      <yd-navbar height="2.4rem" fontsize="1rem" :fixed="true" bgcolor="#333">
         <span slot="left" @click="back" style="font-size:1rem;">
             <yd-navbar-back-icon>返回</yd-navbar-back-icon>
         </span>
-        <span slot="center" style="font-size:1rem;color:#000;">{{$route.query.name}}</span>
+        <span slot="center" style="font-size:1rem;color:#d2d4e1;overflow: hidden;text-overflow: ellipsis;white-space: nowrap;">{{$route.query.name}}</span>
       </yd-navbar>
       <div class="content">
         <div><span>{{dataObj.title}}</span></div>
         <div>
           {{dataObj.con}}
         </div>
-        <div></div>
+        <div>
+          <span @click="last" :class="dataObj.lastPath.indexOf('html') < 0 ? 'noneClick' : ''">上一章</span>
+          <span>目录</span>
+          <span @click="next">下一章</span>
+        </div>
       </div>
     </div>
 </template>
@@ -19,9 +23,42 @@
 export default {
   name: 'ReadBook',
   methods: {
-    back () { this.$router.go(-1) }
+    back () {
+      this.$router.go(-1)
+      this.$dialog.loading.close()
+    },
+    next () {
+      this.$dialog.loading.open('正在加载')
+      this.$api['getBook.readBook'](
+        {
+          path: this.dataObj.nextPath
+        }
+      ).then(res => {
+        if (res.msg.indexOf('OK') >= 0) {
+          this.dataObj = res.data
+          window.scrollTo(0, 0)
+          this.$dialog.loading.close()
+        }
+      })
+    },
+    last () {
+      if (this.dataObj.lastPath.indexOf('html') < 0) { return }
+      this.$dialog.loading.open('正在加载')
+      this.$api['getBook.readBook'](
+        {
+          path: this.dataObj.lastPath
+        }
+      ).then(res => {
+        if (res.msg.indexOf('OK') >= 0) {
+          this.dataObj = res.data
+          window.scrollTo(0, 0)
+          this.$dialog.loading.close()
+        }
+      })
+    }
   },
   mounted () {
+    this.$dialog.loading.open('正在加载')
     this.$store.state.botNav.showTopNav = false
     this.$store.state.botNav.showBottomNav = false
     this.$api['getBook.readBook'](
@@ -32,6 +69,7 @@ export default {
     ).then(res => {
       if (res.msg.indexOf('OK') >= 0) {
         this.dataObj = res.data
+        this.$dialog.loading.close()
       }
     })
   },
@@ -58,5 +96,24 @@ export default {
   }
   .content div:nth-child(2){
     font-size: .9rem;
+    padding-bottom: 4rem;
+  }
+  .content div:nth-child(3){
+    font-size: .9rem;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    background: #333;
+    color: #d2d4e1;
+    width: 100%;
+    height: 3rem;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 2rem;
+  }
+  .noneClick{
+    color: #8b8282!important;
   }
 </style>

@@ -56,9 +56,11 @@ export default {
     }
   },
   mounted () {
+    this.$dialog.loading.open('正在加载')
     this.$api['getBook.getSmallRank']().then(res => {
       if (res.msg.indexOf('OK') >= 0) {
         this.tabData = res.data
+        this.$dialog.loading.close()
       }
     })
   },

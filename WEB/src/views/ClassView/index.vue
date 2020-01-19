@@ -15,9 +15,11 @@ export default {
   name: 'ClassView',
   mounted () {
     // 请求小说分类
+    this.$dialog.loading.open('正在加载')
     this.$api['getBook.classification']().then(res => {
       if (res.msg.indexOf('OK') >= 0) {
         this.listData = res.data
+        this.$dialog.loading.close()
       }
     })
   },

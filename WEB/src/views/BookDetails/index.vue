@@ -37,7 +37,7 @@
         <span style="font-size: 1rem;">最新章节</span>
         <yd-cell-group>
           <yd-cell-item arrow v-for="(item,index) in detail['newChapters']" :key="index">
-              <router-link  slot="left" to="">
+              <router-link  slot="left" :to="{ name: 'ReadBook', query: {path:item.url,name: item.name}}">
                 {{item.name}}
               </router-link>
           </yd-cell-item>
@@ -55,11 +55,13 @@ export default {
     }
   },
   mounted () {
+    this.$dialog.loading.open('正在加载')
     this.$store.state.botNav.showTopNav = false
     this.$store.state.botNav.showBottomNav = false
     this.$api['getBook.details']({ id: this.$route.query.url }).then(res => {
       if (res.msg.indexOf('OK') >= 0) {
         this.detail = res.data
+        this.$dialog.loading.close()
       }
     })
   },

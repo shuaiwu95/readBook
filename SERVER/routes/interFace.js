@@ -130,8 +130,8 @@ router.post('/readBook',(req,res,next)=>{
         let con = $('#content').find('.text').text()
         let title = $('#content').find('.title').text()
         let nextPath = $('.navigator-nobutton').find('ul li').eq(3).find('a').attr('href')
-        let lastPath = $('.navigator-nobutton').find('ul li').eq(1).find('a').attr('href')
-        let allPath = $('.navigator-nobutton').find('ul li').eq(0).find('a').attr('href')
+        let lastPath = $('.navigator-nobutton').find('ul li').eq(0).find('a').attr('href')
+        let allPath = $('.navigator-nobutton').find('ul li').eq(1).find('a').attr('href')
         res.json({
             data: {
                 con: con,
