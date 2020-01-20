@@ -37,7 +37,7 @@
         <span style="font-size: 1rem;">最新章节</span>
         <yd-cell-group>
           <yd-cell-item arrow v-for="(item,index) in detail['newChapters']" :key="index">
-              <router-link  slot="left" :to="{ name: 'ReadBook', query: {path:item.url,name: item.name}}">
+              <router-link  slot="left" :to="{ name: 'ReadBook', query: {path:item.url,name: detail.title}}">
                 {{item.name}}
               </router-link>
           </yd-cell-item>
@@ -63,6 +63,15 @@ export default {
         this.detail = res.data
         this.$dialog.loading.close()
       }
+    }).catch(error => {
+      console.log(error)
+      this.$dialog.loading.close()
+      this.$dialog.loading.close()
+      this.$dialog.toast({
+        mes: '网络异常',
+        timeout: 1500,
+        icon: 'error'
+      })
     })
   },
   data () {

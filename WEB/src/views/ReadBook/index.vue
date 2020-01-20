@@ -8,8 +8,7 @@
       </yd-navbar>
       <div class="content">
         <div><span>{{dataObj.title}}</span></div>
-        <div>
-          {{dataObj.con}}
+        <div v-html="dataObj.con">
         </div>
         <div>
           <span @click="last" :class="dataObj.lastPath.indexOf('html') < 0 ? 'noneClick' : ''">上一章</span>
@@ -27,55 +26,49 @@ export default {
       this.$router.go(-1)
       this.$dialog.loading.close()
     },
-    next () {
+    axiosPost (path) {
       this.$dialog.loading.open('正在加载')
       this.$api['getBook.readBook'](
         {
-          path: this.dataObj.nextPath
+          path: path
         }
       ).then(res => {
         if (res.msg.indexOf('OK') >= 0) {
           this.dataObj = res.data
           window.scrollTo(0, 0)
           this.$dialog.loading.close()
+          this.$set(this.storageBooks, this.$route.query.name, {})
+          this.$set(this.storageBooks[this.$route.query.name], 'bookZhangjieName', this.dataObj.title)
+          this.$set(this.storageBooks[this.$route.query.name], 'bookZhangjiePath', path)
+          this.setStorageBooks(this.storageBooks)
         }
+      }).catch(error => {
+        console.log(error)
+        this.$dialog.loading.close()
+        this.$dialog.toast('网络出错，请稍后重试！', 'error', 2000)
       })
+    },
+    next () {
+      this.axiosPost(this.dataObj.nextPath)
     },
     last () {
       if (this.dataObj.lastPath.indexOf('html') < 0) { return }
-      this.$dialog.loading.open('正在加载')
-      this.$api['getBook.readBook'](
-        {
-          path: this.dataObj.lastPath
-        }
-      ).then(res => {
-        if (res.msg.indexOf('OK') >= 0) {
-          this.dataObj = res.data
-          window.scrollTo(0, 0)
-          this.$dialog.loading.close()
-        }
-      })
+      this.axiosPost(this.dataObj.lastPath)
+    },
+    setStorageBooks (obj) { // 存储阅读记录
+      var checkedIdStr = JSON.stringify(obj)
+      this.$storage.setItem('books', checkedIdStr)
     }
   },
   mounted () {
-    this.$dialog.loading.open('正在加载')
+    this.axiosPost(this.$route.query.path)
     this.$store.state.botNav.showTopNav = false
     this.$store.state.botNav.showBottomNav = false
-    this.$api['getBook.readBook'](
-      {
-        path: this.$route.query.path,
-        url: this.$route.query.url
-      }
-    ).then(res => {
-      if (res.msg.indexOf('OK') >= 0) {
-        this.dataObj = res.data
-        this.$dialog.loading.close()
-      }
-    })
   },
   data () {
     return {
-      dataObj: {}
+      dataObj: {},
+      storageBooks: {}
     }
   }
 }

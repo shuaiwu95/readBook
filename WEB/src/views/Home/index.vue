@@ -1,7 +1,12 @@
 <template>
     <div>
         <con-view>
-          <yd-search :result="result" fullpage v-model="value2" :item-click="itemClickHandler" :on-submit="submitHandler"></yd-search>
+          <vue-scroll
+            :refreshStart='refreshStart'
+            :loadStart='loadStart'
+            :noData='true'
+          >
+            <yd-search :result="result" fullpage v-model="value2" :item-click="itemClickHandler" :on-submit="submitHandler"></yd-search>
           <yd-rollnotice autoplay="2000">
             <yd-rollnotice-item><span style="color:#F00;"> 公告 </span>本站只用于学习交流，没有任何盈利手段</yd-rollnotice-item>
         </yd-rollnotice>
@@ -27,17 +32,36 @@
             </ul>
           </yd-tab-panel>
         </yd-tab>
+          </vue-scroll>
         </con-view>
     </div>
 </template>
 <script>
 import ConView from '@common/ConView'
+import VueScroll from '@common/VueScroll'
 export default {
   name: 'Home',
   components: {
-    ConView
+    ConView,
+    VueScroll
   },
   methods: {
+    // 刷新开始
+    refreshStart (done) {
+      setTimeout(() => {
+        // 这里写 ajax 业务请求，在数据请求到后执行 done() 关闭动画
+        this.loadAxios(() => {
+          done()
+        })
+      }, 1600)
+    },
+    // 加载开始
+    loadStart (done) {
+      setTimeout(() => {
+        // 这里写 ajax 业务请求，在数据请求到后执行 done() 关闭动画
+        done()
+      }, 1600)
+    },
     goRead (url) {
       this.$router.push({ name: 'Detail' })
     },
@@ -53,16 +77,33 @@ export default {
     },
     submitHandler (value) {
       this.$dialog.toast({ mes: `搜索：${value}` })
+    },
+    loadAxios (callback) {
+      this.$dialog.loading.open('正在加载')
+      this.$api['getBook.getSmallRank']().then(res => {
+        if (res.msg.indexOf('OK') >= 0) {
+          this.tabData = res.data
+          this.$dialog.loading.close()
+        }
+        if (callback !== undefined) {
+          callback()
+        }
+      }).catch(error => {
+        console.log(error)
+        this.$dialog.loading.close()
+        this.$dialog.toast({
+          mes: '网络异常',
+          timeout: 1500,
+          icon: 'error'
+        })
+        if (callback !== undefined) {
+          callback()
+        }
+      })
     }
   },
   mounted () {
-    this.$dialog.loading.open('正在加载')
-    this.$api['getBook.getSmallRank']().then(res => {
-      if (res.msg.indexOf('OK') >= 0) {
-        this.tabData = res.data
-        this.$dialog.loading.close()
-      }
-    })
+    this.loadAxios()
   },
   destroyed () {
 

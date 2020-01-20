@@ -127,7 +127,7 @@ router.post('/readBook',(req,res,next)=>{
     console.log(detailUrl +  req.body.url + req.body.path)
     request.get(detailUrl + req.body.path).charset('gbk').end((err,response)=>{
         let $ = cheerio.load(response.text)
-        let con = $('#content').find('.text').text()
+        let con = $('#content').find('.text').html()
         let title = $('#content').find('.title').text()
         let nextPath = $('.navigator-nobutton').find('ul li').eq(3).find('a').attr('href')
         let lastPath = $('.navigator-nobutton').find('ul li').eq(0).find('a').attr('href')

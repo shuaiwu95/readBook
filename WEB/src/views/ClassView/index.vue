@@ -21,6 +21,15 @@ export default {
         this.listData = res.data
         this.$dialog.loading.close()
       }
+    }).catch(error => {
+      console.log(error)
+      this.$dialog.loading.close()
+      this.$dialog.loading.close()
+      this.$dialog.toast({
+        mes: '网络异常',
+        timeout: 1500,
+        icon: 'error'
+      })
     })
   },
   destroyed () {
