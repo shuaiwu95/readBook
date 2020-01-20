@@ -5,7 +5,7 @@
           <span style="font-size:1rem;color:#000;">书虫小说网</span>
           </router-link>
           <router-link to="#" slot="right">
-          <yd-icon name="search" size="1.2rem" color="#09BB07"></yd-icon>
+          <!-- <yd-icon name="search" size="1.2rem" color="#09BB07"></yd-icon> -->
         </router-link>
       </yd-navbar>
       <keep-alive :include="cachedViews">

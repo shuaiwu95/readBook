@@ -7,7 +7,7 @@
         <span slot="center" style="font-size:1rem;color:#d2d4e1;overflow: hidden;text-overflow: ellipsis;white-space: nowrap;">{{$route.query.name}}</span>
       </yd-navbar>
       <div class="content">
-        <div><span>{{dataObj.title}}</span></div>
+        <div><span ref="bookTitle">{{dataObj.title}}</span></div>
         <div v-html="dataObj.con">
         </div>
         <div>
@@ -37,9 +37,12 @@ export default {
           this.dataObj = res.data
           window.scrollTo(0, 0)
           this.$dialog.loading.close()
+          this.storageBooks = JSON.parse(this.$storage.getItem('books'))
           this.$set(this.storageBooks, this.$route.query.name, {})
           this.$set(this.storageBooks[this.$route.query.name], 'bookZhangjieName', this.dataObj.title)
           this.$set(this.storageBooks[this.$route.query.name], 'bookZhangjiePath', path)
+          this.$set(this.storageBooks[this.$route.query.name], 'img', this.$route.query.img)
+          this.$set(this.storageBooks[this.$route.query.name], 'author', this.$route.query.author)
           this.setStorageBooks(this.storageBooks)
         }
       }).catch(error => {
@@ -61,7 +64,16 @@ export default {
     }
   },
   mounted () {
-    this.axiosPost(this.$route.query.path)
+    let path = this.$route.query.path
+    const storageBooks = JSON.parse(this.$storage.getItem('books'))
+    if (storageBooks) {
+      for (const key in storageBooks) {
+        if (key !== 'undefined' && key === this.$route.query.name) {
+          path = storageBooks[key].bookZhangjiePath
+        }
+      }
+    }
+    this.axiosPost(path)
     this.$store.state.botNav.showTopNav = false
     this.$store.state.botNav.showBottomNav = false
   },

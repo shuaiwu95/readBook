@@ -49,4 +49,7 @@ html,body{
 .yd-back-icon:before, .yd-next-icon:before{
   font-size: 1rem !important;
 }
+.yd-popup-content{
+  background-color: #f5f5f5!important;
+}
 </style>

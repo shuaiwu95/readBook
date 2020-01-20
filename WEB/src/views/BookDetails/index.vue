@@ -51,7 +51,16 @@ export default {
   methods: {
     back () { this.$router.go(-1) },
     goRead () {
-      this.$router.push({ name: 'ReadBook', query: { path: this.detail.firstHtml, name: this.detail.title, url: this.$route.query.url } })
+      this.$router.push({
+        name: 'ReadBook',
+        query: {
+          path: this.detail.firstHtml,
+          name: this.detail.title,
+          url: this.$route.query.url,
+          img: this.detail.imgUrl,
+          author: this.detail.author
+        }
+      })
     }
   },
   mounted () {
