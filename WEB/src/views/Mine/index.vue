@@ -80,7 +80,9 @@ export default {
     this.$store.state.botNav.activeMine = false
   },
   activated () {
-
+    this.$store.state.botNav.activeMine = true
+    this.$store.state.botNav.showTopNav = false
+    this.$store.state.botNav.showBottomNav = true
   },
   deactivated: function () {
 

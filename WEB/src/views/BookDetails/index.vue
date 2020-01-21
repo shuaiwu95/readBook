@@ -61,27 +61,44 @@ export default {
           author: this.detail.author
         }
       })
+    },
+    loadAxios () {
+      this.$dialog.loading.open('正在加载')
+      this.$store.state.botNav.showTopNav = false
+      this.$store.state.botNav.showBottomNav = false
+      this.$api['getBook.details']({ id: this.$route.query.url }).then(res => {
+        if (res.msg.indexOf('OK') >= 0) {
+          this.detail = res.data
+          this.$dialog.loading.close()
+        } else {
+          this.$dialog.loading.close()
+        }
+      }).catch(error => {
+        console.log(error)
+        this.$dialog.loading.close()
+        this.$dialog.loading.close()
+        this.$dialog.toast({
+          mes: '网络异常',
+          timeout: 1500,
+          icon: 'error'
+        })
+      })
+    }
+  },
+  watch: {
+    $route (to, from) {
+      if ((from.path === '/' || from.path === '/mine' || from.path === '/sort') && (this.$route.path === '/detail')) {
+        this.detail = {}
+        this.loadAxios()
+      }
     }
   },
   mounted () {
-    this.$dialog.loading.open('正在加载')
+    this.loadAxios()
+  },
+  activated () {
     this.$store.state.botNav.showTopNav = false
     this.$store.state.botNav.showBottomNav = false
-    this.$api['getBook.details']({ id: this.$route.query.url }).then(res => {
-      if (res.msg.indexOf('OK') >= 0) {
-        this.detail = res.data
-        this.$dialog.loading.close()
-      }
-    }).catch(error => {
-      console.log(error)
-      this.$dialog.loading.close()
-      this.$dialog.loading.close()
-      this.$dialog.toast({
-        mes: '网络异常',
-        timeout: 1500,
-        icon: 'error'
-      })
-    })
   },
   data () {
     return {

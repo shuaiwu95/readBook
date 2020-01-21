@@ -79,10 +79,14 @@ export default {
       this.$dialog.toast({ mes: `搜索：${value}` })
     },
     loadAxios (callback) {
-      this.$dialog.loading.open('正在加载')
+      if (callback === undefined) {
+        this.$dialog.loading.open('正在加载')
+      }
       this.$api['getBook.getSmallRank']().then(res => {
         if (res.msg.indexOf('OK') >= 0) {
           this.tabData = res.data
+          this.$dialog.loading.close()
+        } else {
           this.$dialog.loading.close()
         }
         if (callback !== undefined) {

@@ -6,6 +6,7 @@ import Login from '@/views/Login'
 import Home from '@/views/Home'
 import Mine from '@/views/Mine'
 import ClassView from '@/views/ClassView'
+import Sort from '@/views/ClassView/sort'
 import Rank from '@/views/Rank'
 import Detail from '@/views/BookDetails'
 // ReadBook
@@ -37,6 +38,14 @@ const routerInstance = new Router({
             requireAuth: false
           }
         }, {
+          path: 'sort',
+          name: 'Sort',
+          component: Sort,
+          meta: {
+            isCache: true,
+            requireAuth: false
+          }
+        }, {
           path: 'rank',
           name: 'Rank',
           component: Rank,
@@ -57,7 +66,7 @@ const routerInstance = new Router({
           name: 'Detail',
           component: Detail,
           meta: {
-            isCache: false,
+            isCache: true,
             requireAuth: false
           }
         }, {

@@ -57,6 +57,15 @@ export const systemApi = {
         role: []
       },
       desc: '获取小说内容'
+    }, {
+      name: 'getClassList',
+      method: 'POST',
+      path: '/app/getClassList',
+      mockPath: '/app/getClassList',
+      params: {
+        role: []
+      },
+      desc: '获取小说分类列表'
     }
   ]
 }

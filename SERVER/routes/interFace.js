@@ -19,7 +19,16 @@ router.post('/rankSmall',(req,res,next)=>{
     let rankSmallData = []
     request.get(indexUrl).charset('gbk').end((err,response)=>{
         console.log('正在请求首页推荐列表-请求成功')
-        let $ = cheerio.load(response.text);
+        let $ = null
+        try {
+            $ = cheerio.load(response.text)
+        } catch (error) {
+            res.json({
+                data: '',
+                msg: 'ERROR,请求出错'
+            })
+            return
+        }
         let $article = $('.article')
         $article.each(function(i,v){
             let articleTitle = $(v).find('.title span a').text()
@@ -67,7 +76,16 @@ router.post('/rankSmall',(req,res,next)=>{
 router.post('/classification',(req,res,next)=>{
     console.log('正在请求小说分类')
     request.get(classificationUrl).charset('gbk').end((err,response)=>{
-        let $ = cheerio.load(response.text)
+        let $ = null
+        try {
+            $ = cheerio.load(response.text)
+        } catch (error) {
+            res.json({
+                data: '',
+                msg: 'ERROR,请求出错'
+            })
+            return
+        }
         let $contentList = $('.content ul li')
         let classData = []
         $contentList.each(function(liIndex,liItem){
@@ -87,7 +105,16 @@ router.post('/details',(req,res,next)=>{
     console.log('正在请求小说详情')
     console.log(req.body.id)
     request.get(detailUrl + req.body.id).charset('gbk').end((err,response)=>{
-        let $ = cheerio.load(response.text)
+        let $ = null
+        try {
+            $ = cheerio.load(response.text)
+        } catch (error) {
+            res.json({
+                data: '',
+                msg: 'ERROR,请求出错'
+            })
+            return
+        }
         let $block = $('.block')
         let imgUrl = $block.find('img').attr('src')
         let title = $block.find('h2 a').text()
@@ -126,7 +153,16 @@ router.post('/readBook',(req,res,next)=>{
     console.log('正在请求小说内容')
     console.log(detailUrl +  req.body.url + req.body.path)
     request.get(detailUrl + req.body.path).charset('gbk').end((err,response)=>{
-        let $ = cheerio.load(response.text)
+        let $ = null
+        try {
+            $ = cheerio.load(response.text)
+        } catch (error) {
+            res.json({
+                data: '',
+                msg: 'ERROR,请求出错'
+            })
+            return
+        }
         let con = $('#content').find('.text').html()
         let title = $('#content').find('.title').text()
         let nextPath = $('.navigator-nobutton').find('ul li').eq(3).find('a').attr('href')
@@ -139,6 +175,43 @@ router.post('/readBook',(req,res,next)=>{
                 nextPath: nextPath,
                 lastPath: lastPath,
                 allPath: allPath
+            },
+            msg: 'OK,请求成功！'
+        })
+    })
+})
+// 获取小说指定类目
+router.post('/getClassList',(req,res,next)=>{
+    console.log('正在请求小说类目')
+    console.log(detailUrl + req.body.path)
+    request.get(detailUrl + req.body.path).charset('gbk').end((err,response)=>{
+        let $ = null
+        try {
+            $ = cheerio.load(response.text)
+        } catch (error) {
+            res.json({
+                data: '',
+                msg: 'ERROR,请求出错'
+            })
+            return
+        }
+       
+        let cover = $('.cover')
+        let coverP = cover.find('.line')
+        let data = []
+        coverP.each((i, e) => {
+            data.push({
+                type: $(e).find('a').eq(0).text(),
+                name: $(e).find('a').eq(1).text(),
+                author: $(e).find('a').eq(2).text(),
+                path: $(e).find('a').eq(1).attr('href')
+            })
+        })
+        console.log('小说列表加载成功')
+        res.json({
+            data: {
+                list: data,
+                next: $('.page a').eq(0).attr('href')
             },
             msg: 'OK,请求成功！'
         })

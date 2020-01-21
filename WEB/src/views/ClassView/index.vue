@@ -1,7 +1,7 @@
 <template>
     <div>
       <yd-grids-group :rows="3" title="" style="margin-top:0.6rem;">
-        <yd-grids-item :key="n" v-for="n in listData">
+        <yd-grids-item :key="n" v-for="n in listData" @click.native="goList(n)">
             <div class="itemfenlei" slot="text" style="font-size:0.8rem;">
               <img :src="listIcon[n.name]"/>
               <span>{{n.name}}</span>
@@ -13,12 +13,19 @@
 <script>
 export default {
   name: 'ClassView',
+  methods: {
+    goList (n) {
+      this.$router.push({ name: 'Sort', query: { title: n.name, url: n.url } })
+    }
+  },
   mounted () {
     // 请求小说分类
     this.$dialog.loading.open('正在加载')
     this.$api['getBook.classification']().then(res => {
       if (res.msg.indexOf('OK') >= 0) {
         this.listData = res.data
+        this.$dialog.loading.close()
+      } else {
         this.$dialog.loading.close()
       }
     }).catch(error => {
