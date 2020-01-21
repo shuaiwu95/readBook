@@ -6,7 +6,7 @@
             :loadStart='loadStart'
             :noData='true'
           >
-            <yd-search :result="result" fullpage v-model="value2" :item-click="itemClickHandler" :on-submit="submitHandler"></yd-search>
+            <yd-search :result="result" fullpage v-model="value2" :item-click="itemClickHandler" :on-submit="submitHandler" :on-cancel="cancel"></yd-search>
           <yd-rollnotice autoplay="2000">
             <yd-rollnotice-item><span style="color:#F00;"> 公告 </span>本站只用于学习交流，没有任何盈利手段</yd-rollnotice-item>
         </yd-rollnotice>
@@ -66,17 +66,17 @@ export default {
       this.$router.push({ name: 'Detail' })
     },
     getResult (val) {
-      if (!val) return []
-      return [
-        'Apple', 'Banana', 'Orange', 'Durian', 'Lemon', 'Peach', 'Cherry', 'Berry',
-        'Core', 'Fig', 'Haw', 'Melon', 'Plum', 'Pear', 'Peanut', 'Other'
-      ].filter(value => new RegExp(val, 'i').test(value))
+
     },
     itemClickHandler (item) {
-      this.$dialog.toast({ mes: `搜索：${item}` })
+      const itemArr = item.split('-')
+      this.$router.push({ path: '/detail', query: { url: itemArr[3], name: itemArr[1] } })
     },
     submitHandler (value) {
-      this.$dialog.toast({ mes: `搜索：${value}` })
+
+    },
+    cancel () {
+      this.result = []
     },
     loadAxios (callback) {
       if (callback === undefined) {
@@ -109,6 +109,32 @@ export default {
   mounted () {
     this.loadAxios()
   },
+  watch: {
+    value2 (val) {
+      if (val === '') { this.result = [] }
+      if (val !== '') {
+        if (this.timer !== null) {
+          clearTimeout(this.timer)
+        }
+        this.timer = setTimeout(() => {
+          this.$api['getBook.searchBook'](
+            {
+              keyword: val
+            }
+          ).then(res => {
+            if (res.msg.indexOf('OK') >= 0) {
+              this.searchList = res.data.list
+              // this.searchNameList
+              this.searchList.forEach(item => {
+                this.searchNameList.push(item.type + '-' + item.name + '-' + item.author + '-' + item.path)
+              })
+              this.result = this.searchNameList
+            }
+          })
+        }, 500)
+      }
+    }
+  },
   destroyed () {
 
   },
@@ -116,6 +142,8 @@ export default {
     this.$store.state.botNav.activeHome = true
     this.$store.state.botNav.showTopNav = true
     this.$store.state.botNav.showBottomNav = true
+    this.searchList = []
+    this.result = []
   },
   deactivated: function () {
     this.$store.state.botNav.activeHome = false
@@ -129,7 +157,10 @@ export default {
         '//bossaudioandcomic-1252317822.image.myqcloud.com/activity/document/b3565877b754e06f2330e7c9102738b8.jpg',
         '//bossaudioandcomic-1252317822.image.myqcloud.com/activity/document/6deaee8847a4c7852f754fe6fc1856bb.jpg',
         '//bossaudioandcomic-1252317822.image.myqcloud.com/activity/document/5bd6f7285054e68a544a8f4a7adac00b.jpg'
-      ]
+      ],
+      searchList: [],
+      searchNameList: [],
+      timer: null
     }
   }
 }

@@ -217,5 +217,41 @@ router.post('/getClassList',(req,res,next)=>{
         })
     })
 })
+// searchBook
+router.post('/searchBook',(req,res,next)=>{
+    console.log('正在搜索======>' + req.body.keyword)
+    let keyword = req.body.keyword
+    console.log(detailUrl + '/s.php?keyword=' + keyword)
+    request.get(detailUrl + '/s.php?keyword=' + encodeURI(keyword)).charset('gbk').end((err,response)=>{
+        let $ = null
+        try {
+            $ = cheerio.load(response.text)
+        } catch (error) {
+            res.json({
+                data: '',
+                msg: 'ERROR,请求出错'
+            })
+            return
+        }
+        let cover = $('.cover')
+        let coverP = cover.find('.line')
+        let data = []
+        coverP.each((i, e) => {
+            data.push({
+                type: $(e).find('a').eq(0).text(),
+                name: $(e).find('a').eq(1).text(),
+                author: $(e).find('a').eq(2).text(),
+                path: $(e).find('a').eq(1).attr('href')
+            })
+        })
+        console.log('小说列表加载成功')
+        res.json({
+            data: {
+                list: data
+            },
+            msg: 'OK,请求成功！'
+        })
+    })
+})
 module.exports = router;
   

@@ -66,6 +66,15 @@ export const systemApi = {
         role: []
       },
       desc: '获取小说分类列表'
+    }, {
+      name: 'searchBook',
+      method: 'POST',
+      path: '/app/searchBook',
+      mockPath: '/app/searchBook',
+      params: {
+        role: []
+      },
+      desc: '搜索小说'
     }
   ]
 }
