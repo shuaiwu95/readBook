@@ -10,6 +10,8 @@ import Rank from '@/views/Rank'
 import Detail from '@/views/BookDetails'
 // ReadBook
 import ReadBook from '@/views/ReadBook'
+// DB配置页面
+import Dbsetting from '@/views/DbSet'
 Vue.use(Router)
 const routerInstance = new Router({
   routes: [
@@ -72,6 +74,14 @@ const routerInstance = new Router({
       path: '/login',
       name: 'Login',
       component: Login,
+      meta: {
+        isCache: false,
+        requireAuth: false
+      }
+    }, {
+      path: '/dbset',
+      name: 'Dbset',
+      component: Dbsetting,
       meta: {
         isCache: false,
         requireAuth: false

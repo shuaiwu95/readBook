@@ -4,6 +4,7 @@ var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 var interFace = require('./routes/interFace');
+var creatDb = require('./routes/creatDb');
 var app = express();
 const bodyParser = require('body-parser'); //对post请求的请求体进行解析模块
 // cross origin
@@ -20,6 +21,7 @@ app.use(bodyParser.json())
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 app.use('/app', interFace);
+app.use('/db', creatDb);
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
   next(createError(404));

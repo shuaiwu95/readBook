@@ -9,6 +9,15 @@ export const systemApi = {
         role: []
       },
       desc: '用户登录'
+    }, {
+      name: 'createDb',
+      method: 'POST',
+      path: '/db/creat',
+      mockPath: '/db/creat',
+      params: {
+        role: []
+      },
+      desc: '初始化数据库'
     }
   ],
   getBook: [
