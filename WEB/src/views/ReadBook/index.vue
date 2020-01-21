@@ -37,7 +37,9 @@ export default {
           this.dataObj = res.data
           window.scrollTo(0, 0)
           this.$dialog.loading.close()
-          this.storageBooks = JSON.parse(this.$storage.getItem('books'))
+          if (this.$storage.getItem('books') !== null) {
+            this.storageBooks = JSON.parse(this.$storage.getItem('books'))
+          }
           this.$set(this.storageBooks, this.$route.query.name, {})
           this.$set(this.storageBooks[this.$route.query.name], 'bookZhangjieName', this.dataObj.title)
           this.$set(this.storageBooks[this.$route.query.name], 'bookZhangjiePath', path)
