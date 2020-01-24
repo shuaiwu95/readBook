@@ -52,4 +52,26 @@ html,body{
 .yd-popup-content{
   background-color: #f5f5f5!important;
 }
+.yd-cell-left {
+    color: #555;
+    font-size: .9rem!important;
+    white-space: nowrap;
+    -ms-flex-align: center;
+}
+.yd-input-error:after {
+    content: "\E614";
+    color: #f43530;
+    font-size: 1rem!important;
+}
+.yd-input-password:after {
+    content: "\E77E";
+    color: #b2b2b2;
+   font-size: 1rem!important;
+}
+.yd-input>input{
+  font-size: .9rem!important;
+}
+.yd-cell-right select{
+   font-size: .9rem!important;
+}
 </style>

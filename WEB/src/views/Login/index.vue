@@ -23,6 +23,10 @@
           label="立即登录"
           @on-click="login"/>
         </div>
+        <div class="zhucezh">
+          <span>忘记密码？</span>
+          <span @click="toReg">注册账号</span>
+        </div>
       </div>
     </div>
 </template>
@@ -39,10 +43,45 @@ export default {
   },
   methods: {
     login () {
-      // 存储TOKEN
-      this.$setToken('TOKEN-855225-1515-9664')
+      this.$dialog.loading.open('正在验证登录信息')
+      this.$api['system.login']({
+        userName: this.userName,
+        psw: this.psw
+      }).then(res => {
+        if (res && res.msg.indexOf('OK') >= 0) {
+          this.$dialog.loading.close()
+          this.$dialog.toast({
+            mes: '登录成功！',
+            timeout: 1500,
+            icon: 'success',
+            callback: () => {
+              // 存储TOKEN
+              this.$setToken(res.data[0].USERNAME)
+              this.$storage.setItem('nickName', res.data[0].NICKNAME)
+              this.$router.push({ name: 'Home' })
+            }
+          })
+        } else {
+          this.$dialog.toast({
+            mes: res.msg,
+            timeout: 1500,
+            icon: 'error'
+          })
+          this.$dialog.loading.close()
+        }
+      // eslint-disable-next-line handle-callback-err
+      }).catch(error => {
+        this.$dialog.toast({
+          mes: '服务器异常，请稍后再试',
+          timeout: 1500,
+          icon: 'error'
+        })
+      })
       // 登录跳转
-      this.$router.push({ name: 'Home' })
+      // this.$router.push({ name: 'Home' })
+    },
+    toReg () { // 去注册界面
+      this.$router.push({ name: 'Reg', query: { name: '注册账号' } })
     },
     getUsN (val) {
       this.userName = val
@@ -86,5 +125,15 @@ export default {
   }
   .login-con-item-group:nth-child(3){
     margin-top: 3rem;
+  }
+  .zhucezh{
+    display: flex;
+    flex-direction: row-reverse;
+    width: 100%;
+    padding: 1rem 15%;
+  }
+  .zhucezh span{
+    margin-left: 1rem;
+    color: blue;
   }
 </style>

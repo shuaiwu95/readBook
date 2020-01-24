@@ -1,10 +1,19 @@
 export const systemApi = {
   system: [
     {
-      name: 'loginIn',
+      name: 'login',
       method: 'POST',
-      path: '/loginIn/getData',
-      mockPath: '/loginIn/getData',
+      path: '/app/login',
+      mockPath: '/app/login',
+      params: {
+        role: []
+      },
+      desc: '用户登录'
+    }, {
+      name: 'reg',
+      method: 'POST',
+      path: '/app/reg',
+      mockPath: '/app/reg',
       params: {
         role: []
       },

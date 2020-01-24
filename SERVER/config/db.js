@@ -1,11 +1,12 @@
 var mysql = require('mysql')
 const confDb = require('../config/dbConf.json')
 var config = {
-    ip: confDb.ip,
+    host: confDb.ip,
     port: confDb.port,
     user: confDb.user,
     password: confDb.password,
-    database: confDb.database
+    database: confDb.database,
+    useConnectionPooling: true
 }
 exports.getConnection = function () {
     return mysql.createConnection(config);

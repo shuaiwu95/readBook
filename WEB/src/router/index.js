@@ -3,6 +3,7 @@ import Router from 'vue-router'
 import { beforeEachFn } from './routerBeforeFn'
 import Layout from '@/views/Layout'
 import Login from '@/views/Login'
+import Reg from '@/views/RegPage'
 import Home from '@/views/Home'
 import Mine from '@/views/Mine'
 import ClassView from '@/views/ClassView'
@@ -83,6 +84,14 @@ const routerInstance = new Router({
       path: '/login',
       name: 'Login',
       component: Login,
+      meta: {
+        isCache: false,
+        requireAuth: false
+      }
+    }, {
+      path: '/reg',
+      name: 'Reg',
+      component: Reg,
       meta: {
         isCache: false,
         requireAuth: false

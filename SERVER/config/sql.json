@@ -1,0 +1,6 @@
+{
+    "createUser": "create table usertable (ID INTEGER AUTO_INCREMENT PRIMARY KEY COMMENT '主键', USERNAME VARCHAR(20) COMMENT '账号', PSW VARCHAR(20) COMMENT '密码', SEX VARCHAR(1) COMMENT '性别', EMAIL VARCHAR(100) COMMENT '邮箱', NICKNAME VARCHAR(100) COMMENT '昵称')",
+    "insertUser": "insert into usertable (USERNAME, PSW, SEX, EMAIL, NICKNAME) values",
+    "isRepeat": "select * from usertable where ",
+    "login": "select * from usertable where "
+}

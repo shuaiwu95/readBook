@@ -5,8 +5,8 @@
           <img :src="userImg"/>
         </div>
         <div>
-          <span>游客123</span>
-          <span>id:2556632</span>
+          <span>{{nickName || '游客123'}}</span>
+          <span>{{userId || '123456'}}</span>
         </div>
       </div>
       <yd-cell-group style="margin-top:1rem;">
@@ -18,7 +18,8 @@
             <yd-icon style="margin-left:0.5rem;" slot="icon" name="shopcart" color="red" size="1.2rem"></yd-icon>
             <span style="font-size:1rem;margin-left:1rem;" slot="left">我的书架</span>
         </yd-cell-item>
-    </yd-cell-group>
+      </yd-cell-group>
+      <yd-button size="large" :type="btnType" @click.native="toLogin">{{btnName}}</yd-button>
         <yd-popup v-model="showHistory" position="right" style="background-color:#f5f5f5;!important">
           <div class="his-title"><span>阅读记录</span></div>
           <div class="historyCon">
@@ -40,7 +41,11 @@
 export default {
   methods: {
     toLogin () {
-      this.$clearToken()
+      // this.$clearToken()
+      if (this.$storage.getItem('TOKEN_STR')) {
+        this.$storage.removeItem('TOKEN_STR')
+        this.$storage.removeItem('nickName')
+      }
       this.$router.push({ name: 'Login' })
     },
     goRead (obj) {
@@ -75,6 +80,12 @@ export default {
         }
       }
     }
+    this.userId = this.$storage.getItem('TOKEN_STR')
+    this.nickName = this.$storage.getItem('nickName')
+    if (this.userId) {
+      this.btnType = 'danger'
+      this.btnName = '注销登录'
+    }
   },
   destroyed () {
     this.$store.state.botNav.activeMine = false
@@ -91,7 +102,11 @@ export default {
     return {
       userImg: 'http://img-tailor.11222.cn/pm/app/img_1508230970.png',
       showHistory: false,
-      hisData: []
+      hisData: [],
+      userId: '',
+      nickName: '',
+      btnType: 'primary',
+      btnName: '去登录'
     }
   }
 }
@@ -161,5 +176,9 @@ export default {
     padding: 1rem;
     padding-bottom: 0;
     font-size: 1rem;
+  }
+  .yd-btn-block{
+    height: 2rem;
+    font-size: .9rem;
   }
 </style>

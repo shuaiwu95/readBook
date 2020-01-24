@@ -4,6 +4,7 @@ const router = express.Router();
 const db = require('../config/db');
 const fs = require('fs'); //文件模块
 const confDb = require('../config/dbConf.json')
+const sqlJson = require('../config/sql.json')
 // 读取数据库配置文件
 const readCon = (callback) => {
     fs.readFile('./config/dbConf.json', function (err, data) {
@@ -18,8 +19,23 @@ const readCon = (callback) => {
         }
     })
 }
+
+let createUserTable = sqlJson.createUser
+ // 创建用户表
+const createUser = (conn)=> {
+     console.log(createUserTable)
+     conn.query(createUserTable, function (err, results, fields) {
+        if (err) {
+             console.log('[用户表创建失败] - ', err.message);
+            return;
+        }
+        console.log('--------------------------CREATE----------------------------');       
+        console.log('CREATE TABLE:', results);        
+        console.log('---------用户表创建成功--------\n\n');  
+     });
+}
 router.post('/creat',(req,res,next)=>{
-    // const conn = db.getConnection();
+    const conn = db.getConnection();
     console.log('准备初始化数据库')
     console.log('正在创建配置文件')
     readCon((person) => {
@@ -37,7 +53,13 @@ router.post('/creat',(req,res,next)=>{
             console.log('----------配置写入成功-------------')
             console.log(confDb)
             if (reqJson.unitBase) {
+                if (confDb.database === '') {
+                    res.json({'data': '123','msg':'OK,请输入数据库名称！'})
+                    return
+                }
                 // 初始化数据库
+                conn.connect()
+                createUser(conn)
                 res.json({'data': '123','msg':'OK,数据库初始化成功！'})
             } else {
                 res.json({'data': '123','msg':'OK,数据库配置文件重置成功！'})
