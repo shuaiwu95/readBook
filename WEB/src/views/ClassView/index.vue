@@ -7,7 +7,7 @@
               <span>{{n.name}}</span>
             </div>
         </yd-grids-item>
-    </yd-grids-group>
+      </yd-grids-group>
     </div>
 </template>
 <script>

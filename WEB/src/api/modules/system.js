@@ -27,6 +27,51 @@ export const systemApi = {
         role: []
       },
       desc: '初始化数据库'
+    }, {
+      name: 'addBookShelf',
+      method: 'POST',
+      path: '/app/addBookShelf',
+      mockPath: '/app/addBookShelf',
+      params: {
+        role: []
+      },
+      desc: '添加书架'
+    }, {
+      name: 'searchBookShelf',
+      method: 'POST',
+      path: '/app/searchBookShelf',
+      mockPath: '/app/searchBookShelf',
+      params: {
+        role: []
+      },
+      desc: '查询书架'
+    }, {
+      name: 'delBookShelf',
+      method: 'POST',
+      path: '/app/delBookShelf',
+      mockPath: '/app/delBookShelf',
+      params: {
+        role: []
+      },
+      desc: '移除书架'
+    }, {
+      name: 'repeatBookShelf',
+      method: 'POST',
+      path: '/app/repeatBookShelf',
+      mockPath: '/app/repeatBookShelf',
+      params: {
+        role: []
+      },
+      desc: '判断该书是否存在于书架'
+    }, {
+      name: 'updataBookShelf',
+      method: 'POST',
+      path: '/app/updataBookShelf',
+      mockPath: '/app/updataBookShelf',
+      params: {
+        role: []
+      },
+      desc: '书架信息更新'
     }
   ],
   getBook: [

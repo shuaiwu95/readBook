@@ -27,7 +27,7 @@
       </div>
       <div class="detail-btn">
         <yd-button type="primary" @click.native="goRead">开始阅读</yd-button>
-        <yd-button type="danger">加入书架</yd-button>
+        <yd-button :type="isInShelf? 'disabled' : 'danger'" @click.native="addBookShelf">加入书架</yd-button>
         <yd-button type="warning">查看目录</yd-button>
       </div>
       <div class="detail-jianjie">
@@ -50,6 +50,74 @@ export default {
   name: 'Detail',
   methods: {
     back () { this.$router.go(-1) },
+    toLogin () {
+      // this.$clearToken()
+      if (this.$storage.getItem('TOKEN_STR')) {
+        this.$storage.removeItem('TOKEN_STR')
+        this.$storage.removeItem('nickName')
+      }
+      this.$router.push({ name: 'Login' })
+    },
+    addBookShelf () {
+      if (this.isInShelf) { return }
+      if (!this.$storage.getItem('TOKEN_STR')) {
+        this.$dialog.confirm({
+          title: '温馨提示',
+          mes: '您只有登录后才可以添加书架哦，点击确定去登录',
+          opts: () => {
+            this.toLogin()
+          }
+        })
+        return
+      }
+      // eslint-disable-next-line no-unused-vars
+      const userId = this.$storage.getItem('TOKEN_STR')
+      // eslint-disable-next-line no-unused-vars
+      const bookName = this.detail.title
+      // eslint-disable-next-line no-unused-vars
+      const author = this.detail.author
+      // eslint-disable-next-line no-unused-vars
+      const imgPath = this.detail.imgUrl
+      // eslint-disable-next-line no-unused-vars
+      let path = this.detail.firstHtml
+      const storageBooks = JSON.parse(this.$storage.getItem('books'))
+      if (storageBooks) {
+        for (const key in storageBooks) {
+          if (key !== 'undefined' && key === this.$route.query.name) {
+            path = storageBooks[key].bookZhangjiePath
+          }
+        }
+      }
+      this.$api['system.addBookShelf']({
+        userId: userId,
+        bookName: bookName,
+        author: author,
+        imgPath: imgPath,
+        path: path
+      }).then(res => {
+        if (res.msg.indexOf('OK') >= 0) {
+          this.$dialog.toast({
+            mes: '您已成功将该书加入您的书架！',
+            timeout: 1500,
+            icon: 'success'
+          })
+          this.isInShelf = true
+        } else {
+          this.$dialog.toast({
+            mes: res.msg,
+            timeout: 1500,
+            icon: 'error'
+          })
+        }
+      // eslint-disable-next-line handle-callback-err
+      }).catch(error => {
+        this.$dialog.toast({
+          mes: '服务器异常，请稍后再试',
+          timeout: 1500,
+          icon: 'error'
+        })
+      })
+    },
     goRead () {
       this.$router.push({
         name: 'ReadBook',
@@ -69,7 +137,11 @@ export default {
       this.$api['getBook.details']({ id: this.$route.query.url }).then(res => {
         if (res.msg.indexOf('OK') >= 0) {
           this.detail = res.data
-          this.$dialog.loading.close()
+          if (this.$storage.getItem('TOKEN_STR')) {
+            this.isInBookShelf()
+          } else {
+            this.$dialog.loading.close()
+          }
         } else {
           this.$dialog.loading.close()
         }
@@ -79,6 +151,33 @@ export default {
         this.$dialog.loading.close()
         this.$dialog.toast({
           mes: '网络异常',
+          timeout: 1500,
+          icon: 'error'
+        })
+      })
+    },
+    isInBookShelf () {
+      this.$api['system.repeatBookShelf']({
+        userId: this.$storage.getItem('TOKEN_STR'),
+        bookName: this.detail.title
+      }).then(res => {
+        if (res.msg.indexOf('OK') >= 0) {
+          // eslint-disable-next-line no-unused-vars
+          const code = res.data
+          if (code === '1') { this.isInShelf = true } else { this.isInShelf = false }
+          this.$dialog.loading.close()
+        } else {
+          this.$dialog.toast({
+            mes: res.msg,
+            timeout: 1500,
+            icon: 'error'
+          })
+          this.$dialog.loading.close()
+        }
+      // eslint-disable-next-line handle-callback-err
+      }).catch(error => {
+        this.$dialog.toast({
+          mes: '服务器异常，请稍后再试',
           timeout: 1500,
           icon: 'error'
         })
@@ -102,7 +201,8 @@ export default {
   },
   data () {
     return {
-      detail: {}
+      detail: {},
+      isInShelf: false
     }
   }
 }

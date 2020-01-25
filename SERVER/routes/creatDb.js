@@ -21,6 +21,7 @@ const readCon = (callback) => {
 }
 
 let createUserTable = sqlJson.createUser
+let createBookShelfTable = sqlJson.createBookShelf
  // 创建用户表
 const createUser = (conn)=> {
      console.log(createUserTable)
@@ -33,6 +34,19 @@ const createUser = (conn)=> {
         console.log('CREATE TABLE:', results);        
         console.log('---------用户表创建成功--------\n\n');  
      });
+}
+// 创建书架表
+const createBookShelf = (conn)=> {
+    console.log(createBookShelfTable)
+    conn.query(createBookShelfTable, function (err, results, fields) {
+       if (err) {
+            console.log('[书架表创建失败] - ', err.message);
+           return;
+       }
+       console.log('--------------------------CREATE----------------------------');       
+       console.log('CREATE TABLE:', results);        
+       console.log('---------书架表创建成功--------\n\n');  
+    });
 }
 router.post('/creat',(req,res,next)=>{
     const conn = db.getConnection();
@@ -60,6 +74,7 @@ router.post('/creat',(req,res,next)=>{
                 // 初始化数据库
                 conn.connect()
                 createUser(conn)
+                createBookShelf(conn)
                 res.json({'data': '123','msg':'OK,数据库初始化成功！'})
             } else {
                 res.json({'data': '123','msg':'OK,数据库配置文件重置成功！'})

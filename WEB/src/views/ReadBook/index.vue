@@ -46,6 +46,10 @@ export default {
           this.$set(this.storageBooks[this.$route.query.name], 'img', this.$route.query.img)
           this.$set(this.storageBooks[this.$route.query.name], 'author', this.$route.query.author)
           this.setStorageBooks(this.storageBooks)
+          if (this.$storage.getItem('TOKEN_STR')) {
+            // 更新书架数据
+            this.updataBookShelf(path, this.$storage.getItem('TOKEN_STR'), this.$route.query.name)
+          }
         }
       }).catch(error => {
         console.log(error)
@@ -63,6 +67,30 @@ export default {
     setStorageBooks (obj) { // 存储阅读记录
       var checkedIdStr = JSON.stringify(obj)
       this.$storage.setItem('books', checkedIdStr)
+    },
+    updataBookShelf (path, userId, bookName) {
+      this.$api['system.updataBookShelf']({
+        path: path,
+        userId: userId,
+        bookName: bookName
+      }).then(res => {
+        if (res.msg.indexOf('OK') >= 0) {
+
+        } else {
+          this.$dialog.toast({
+            mes: res.msg,
+            timeout: 1500,
+            icon: 'error'
+          })
+        }
+      // eslint-disable-next-line handle-callback-err
+      }).catch(error => {
+        this.$dialog.toast({
+          mes: '服务器异常，请稍后再试',
+          timeout: 1500,
+          icon: 'error'
+        })
+      })
     }
   },
   mounted () {

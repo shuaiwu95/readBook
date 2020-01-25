@@ -26,6 +26,7 @@
         <div class="zhucezh">
           <span>忘记密码？</span>
           <span @click="toReg">注册账号</span>
+          <span @click="youke">游客模式进入</span>
         </div>
       </div>
     </div>
@@ -42,6 +43,9 @@ export default {
     VButton
   },
   methods: {
+    youke () {
+      this.$router.push({ name: 'Home' })
+    },
     login () {
       this.$dialog.loading.open('正在验证登录信息')
       this.$api['system.login']({

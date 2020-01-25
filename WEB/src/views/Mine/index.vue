@@ -14,7 +14,7 @@
             <yd-icon style="margin-left:0.5rem;" slot="icon" name="footmark" color="#00c98d" size="1.2rem"></yd-icon>
             <span style="font-size:1rem; margin-left:1rem;" slot="left">阅读记录</span>
         </yd-cell-item>
-        <yd-cell-item arrow>
+        <yd-cell-item arrow @click.native="toBookShelf">
             <yd-icon style="margin-left:0.5rem;" slot="icon" name="shopcart" color="red" size="1.2rem"></yd-icon>
             <span style="font-size:1rem;margin-left:1rem;" slot="left">我的书架</span>
         </yd-cell-item>
@@ -40,6 +40,19 @@
 <script>
 export default {
   methods: {
+    toBookShelf () {
+      if (!this.userId) {
+        this.$dialog.confirm({
+          title: '温馨提示',
+          mes: '您只有登录后才可以查看书架哦，点击确定去登录',
+          opts: () => {
+            this.toLogin()
+          }
+        })
+        return
+      }
+      this.$router.push({ name: 'BookShelf' })
+    },
     toLogin () {
       // this.$clearToken()
       if (this.$storage.getItem('TOKEN_STR')) {

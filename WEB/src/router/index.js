@@ -12,6 +12,8 @@ import Rank from '@/views/Rank'
 import Detail from '@/views/BookDetails'
 // ReadBook
 import ReadBook from '@/views/ReadBook'
+// 书架
+import BookShelf from '@/views/BookShelf'
 // DB配置页面
 import Dbsetting from '@/views/DbSet'
 Vue.use(Router)
@@ -74,6 +76,14 @@ const routerInstance = new Router({
           path: 'readBook',
           name: 'ReadBook',
           component: ReadBook,
+          meta: {
+            isCache: false,
+            requireAuth: false
+          }
+        }, {
+          path: 'bookshelf',
+          name: 'BookShelf',
+          component: BookShelf,
           meta: {
             isCache: false,
             requireAuth: false
