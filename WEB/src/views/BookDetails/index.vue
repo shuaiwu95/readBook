@@ -28,7 +28,7 @@
       <div class="detail-btn">
         <yd-button type="primary" @click.native="goRead">开始阅读</yd-button>
         <yd-button :type="isInShelf? 'disabled' : 'danger'" @click.native="addBookShelf">加入书架</yd-button>
-        <yd-button type="warning">查看目录</yd-button>
+        <yd-button type="warning" @click.native="goCatalog">查看目录</yd-button>
       </div>
       <div class="detail-jianjie">
         {{detail['info']}}
@@ -121,6 +121,18 @@ export default {
     goRead () {
       this.$router.push({
         name: 'ReadBook',
+        query: {
+          path: this.detail.firstHtml,
+          name: this.detail.title,
+          url: this.$route.query.url,
+          img: this.detail.imgUrl,
+          author: this.detail.author
+        }
+      })
+    },
+    goCatalog () {
+      this.$router.push({
+        name: 'Catalog',
         query: {
           path: this.detail.firstHtml,
           name: this.detail.title,

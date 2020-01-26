@@ -129,6 +129,15 @@ export const systemApi = {
         role: []
       },
       desc: '搜索小说'
+    }, {
+      name: 'catalog',
+      method: 'POST',
+      path: '/app/catalog',
+      mockPath: '/app/catalog',
+      params: {
+        role: []
+      },
+      desc: '小说目录'
     }
   ]
 }
