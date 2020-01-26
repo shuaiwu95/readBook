@@ -3,6 +3,19 @@ const router = express.Router()
 const db = require('../config/db')
 const confDb = require('../config/dbConf.json')
 const sqlJson = require('../config/sql.json')
+// 数据库断开重连
+
+const handleError = (err, connect) => {
+    if (err) {
+        // 如果是连接断开，自动重新连接
+        if (err.code === 'PROTOCOL_CONNECTION_LOST') {
+          connect()
+        } else {
+          console.error(err.stack || err)
+        }
+    }
+}
+
 // 查询账号是否重复
 const isRepeat = (conn, params, res) => {
     const sqlStr = sqlJson.isRepeat
@@ -12,6 +25,7 @@ const isRepeat = (conn, params, res) => {
         function (err, result) {
             if (err) {
                 console.log("对不起您查询失败")
+                handleError(err, conn)
                 return
             }
             if (result.length === 1) {
@@ -29,8 +43,9 @@ const insertUser = (conn, params, res)=> {
     console.log(sqlStr)
     conn.query(sqlStr, function (err, results, fields) {
         if (err) {
-             console.log('[用户信息插入失败] - ', err.message)
-             res.json({'msg':'ERROR,数据库异常！'})
+            handleError(err, conn)
+            console.log('[用户信息插入失败] - ', err.message)
+            res.json({'msg':'ERROR,数据库异常！'})
             return;
         }
         console.log('--------------------------CREATE----------------------------')
@@ -54,6 +69,7 @@ router.post('/login',(req, res, next) => {
         [params.userName, params.psw],
         function (err, result) {
             if (err) {
+                handleError(err, conn)
                 console.log("对不起您查询失败")
                 res.json({'msg':'ERROR,数据库异常！'})
                 return
@@ -73,8 +89,9 @@ const addBookShelf = (conn, params, res) => {
     console.log(sqlStr)
     conn.query(sqlStr, function (err, results, fields) {
         if (err) {
-             console.log('[书插入失败] - ', err.message)
-             res.json({'msg':'ERROR,数据库异常！'})
+            handleError(err, conn)
+            console.log('[书插入失败] - ', err.message)
+            res.json({'msg':'ERROR,数据库异常！'})
             return;
         }
         console.log('--------------------------CREATE----------------------------')
@@ -96,6 +113,7 @@ const searchBookShelf = (conn, params, res) => {
         sqlStr,
         function (err, result) {
             if (err) {
+                handleError(err, conn)
                 console.log("对不起您查询失败")
                 res.json({'msg':'ERROR,数据库异常！'})
                 return
@@ -114,8 +132,9 @@ const delBookShelf = (conn, params, res) => {
     const sqlStr = sqlJson.delBookShelf + `USERID = '${params.userId}' and BOOKNAME = '${params.bookName}'`
     conn.query(sqlStr, function (err, results, fields) {
         if (err) {
-             console.log('[书删除失败] - ', err.message)
-             res.json({'msg':'ERROR,数据库异常！'})
+            handleError(err, conn)
+            console.log('[书删除失败] - ', err.message)
+            res.json({'msg':'ERROR,数据库异常！'})
             return;
         }
         console.log('--------------------------Delete----------------------------')
@@ -138,6 +157,7 @@ const repeatBookShelf = (conn, params, res)=> {
         sqlStr,
         function (err, result) {
             if (err) {
+                handleError(err, conn)
                 console.log("对不起您查询失败")
                 res.json({'msg':'ERROR,数据库异常！'})
                 return
@@ -162,6 +182,7 @@ const updataBookShelf = (conn, params, res) => {
         sqlStr,
         function (err, result) {
             if (err) {
+                handleError(err, conn)
                 console.log("对不起您查询失败")
                 res.json({'msg':'ERROR,数据库异常！'})
                 return

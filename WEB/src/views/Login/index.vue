@@ -80,6 +80,7 @@ export default {
           timeout: 1500,
           icon: 'error'
         })
+        this.$dialog.loading.close()
       })
       // 登录跳转
       // this.$router.push({ name: 'Home' })

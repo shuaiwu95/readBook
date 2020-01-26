@@ -12,21 +12,30 @@
         </div>
         <div>
           <span @click="last" :class="dataObj.lastPath.indexOf('html') < 0 ? 'noneClick' : ''">上一章</span>
-          <span>目录</span>
+          <span @click="showCatalog = true">目录</span>
           <span @click="next">下一章</span>
         </div>
       </div>
+      <catalog-view :show="showCatalog" @onHandle="onHandle" :path="$route.query.url" @on-clickRead="clickRead"></catalog-view>
     </div>
 </template>
 <script>
+import CatalogView from './Catalog'
 export default {
   name: 'ReadBook',
+  components: { CatalogView },
   methods: {
     back () {
       this.$router.go(-1)
       this.$dialog.loading.close()
     },
-    axiosPost (path) {
+    onHandle (val) {
+      this.showCatalog = val
+    },
+    clickRead (data) {
+      this.axiosPost(data.path, true)
+    },
+    axiosPost (path, flag) {
       this.$dialog.loading.open('正在加载')
       this.$api['getBook.readBook'](
         {
@@ -46,6 +55,9 @@ export default {
           this.$set(this.storageBooks[this.$route.query.name], 'img', this.$route.query.img)
           this.$set(this.storageBooks[this.$route.query.name], 'author', this.$route.query.author)
           this.setStorageBooks(this.storageBooks)
+          if (flag) {
+            this.$router.go(-1)
+          }
           if (this.$storage.getItem('TOKEN_STR')) {
             // 更新书架数据
             this.updataBookShelf(path, this.$storage.getItem('TOKEN_STR'), this.$route.query.name)
@@ -96,7 +108,7 @@ export default {
   mounted () {
     let path = this.$route.query.path
     const storageBooks = JSON.parse(this.$storage.getItem('books'))
-    if (storageBooks) {
+    if (storageBooks && !this.$route.query.isCatalog) {
       for (const key in storageBooks) {
         if (key !== 'undefined' && key === this.$route.query.name) {
           path = storageBooks[key].bookZhangjiePath
@@ -110,7 +122,8 @@ export default {
   data () {
     return {
       dataObj: {},
-      storageBooks: {}
+      storageBooks: {},
+      showCatalog: false
     }
   }
 }

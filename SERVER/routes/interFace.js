@@ -253,5 +253,52 @@ router.post('/searchBook',(req,res,next)=>{
         })
     })
 })
+// catalog
+router.post('/catalog',(req,res,next)=>{
+    console.log('正在搜索======>' + req.body.path)
+    let path = req.body.path
+    console.log(detailUrl + path)
+    request.get(detailUrl + path).charset('gbk').end((err,response)=>{
+        let $ = null
+        try {
+            $ = cheerio.load(response.text)
+        } catch (error) {
+            res.json({
+                data: '',
+                msg: 'ERROR,请求出错'
+            })
+            return
+        }
+        let cover = $('.cover')
+        let read = cover.find('.read')
+        let title = read.find('h3').text()
+        let zxPath = read.find('span a').eq(0).attr('href')
+        let dxPath = read.find('span a').eq(1).attr('href')
+        let chapter = cover.find('.chapter')
+        let nextPageDom = $('.page').eq(0)
+        nextPageDom.find('a').each((i,e) => {
+            if($(e).text() === '下一页') {
+                nextPage = $(e).attr('href')
+            }
+        })
+        let zjList = []
+        chapter.find('li').each((i,e) => {
+            zjList.push({
+                name: $(e).find('a').text(),
+                path: $(e).find('a').attr('href')
+            })
+        })
+        res.json({
+            data: {
+                title: title,
+                zxPath: zxPath,
+                dxPath: dxPath,
+                zjList: zjList,
+                nextPage: nextPage
+            },
+            msg: 'OK,请求成功！'
+        })
+    })
+})
 module.exports = router;
   

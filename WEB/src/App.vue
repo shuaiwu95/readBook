@@ -40,6 +40,16 @@ export default {
 
 <style>
 @import url('./assets/styles/iconFont.css');
+
+* {
+-webkit-touch-callout:none;
+-webkit-user-select:none;
+-khtml-user-select:none;
+-moz-user-select:none;
+-ms-user-select:none;
+user-select:none;
+}
+
 html,body{
   margin: 0;
   padding: 0;
@@ -73,5 +83,23 @@ html,body{
 }
 .yd-cell-right select{
    font-size: .9rem!important;
+}
+.yd-actionsheet-item {
+    display: block;
+    position: relative;
+    font-size: 1rem!important;
+    color: #555;
+    height: 3rem!important;
+    line-height: 3rem!important;
+    background-color: #fff;
+}
+.yd-actionsheet-action {
+    display: block;
+    margin-top: .15rem;
+    font-size: 1rem!important;
+    color: #555;
+    height: 3rem!important;
+    line-height: 3rem!important;
+    background-color: #fff;
 }
 </style>
