@@ -9,7 +9,7 @@
   },
   "dependencies": {
     "@vue/eslint-config-standard": "^5.0.1",
-    "axios": "^0.19.0",
+    "axios": "^0.21.1",
     "core-js": "^3.4.3",
     "eslint-plugin-import": "^2.19.1",
     "eslint-plugin-node": "^10.0.0",
